@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import DemoTracking from "./DemoTracking";
 import { ArrowRight, BusFront, Clock3, MapPin, Radio, RefreshCw } from "lucide-react";
 import { Meta, Stop, Vehicle, clock, request, sourceLabel } from "./types";
 
@@ -16,6 +17,7 @@ type Monitor = {
 const dated = (value: string) => new Date(value).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" });
 
 export default function RouteMonitor({ id, name, route, loading, routeError }: { id: string; name: string; route: RouteDetail | null; loading: boolean; routeError: string }) {
+  const [demo,setDemo]=useState(false);
   const [index, setIndex] = useState(0);
   const [state, setState] = useState<Monitor | null>(null);
   const [error, setError] = useState("");
@@ -75,6 +77,8 @@ export default function RouteMonitor({ id, name, route, loading, routeError }: {
       </>}
       {route && at && index < route.stops.length - 1 && <Link className="rl-text-link" href={"/planner?origin=" + encodeURIComponent(at.id) + "&destination=" + encodeURIComponent(route.stops[route.stops.length - 1].id)}>Plan from this stop · watch delays and alternatives <ArrowRight size={14} /></Link>}
     </section>
+    {state && !state.arrivals.length && <div className="rl-panel"><p>No real departures available at this stop. Try another stop or explore a clearly labeled corridor simulation.</p><button className="rl-primary" onClick={()=>setDemo(true)}>Preview moving demo bus</button></div>}
+    {demo && <DemoTracking onClose={()=>setDemo(false)}/>}
     <div className="rl-tool-map rl-monitor-map">
       <Map journey={null} stops={route?.stops || []} vehicles={state?.vehicles || []} geometry={route?.geometry} sourceMode={state?.mode || "schedule"} selectedStopIndex={index} onStopSelect={(_, i) => setIndex(i)} />
       <div className="rl-map-caption">{name} · {route?.geometry_source || "Published route"}. Small dots are bus stops; A/B mark endpoints. Select a dot to see its arrivals. Bus icons require fresh source GPS.</div>

@@ -279,13 +279,13 @@ def arrivals(sid:str):
  if mode()!='simulation':vs+=scheduled_vehicles(now,{(v['trip_id'],v['service_date']) for v in vs},target=sid)
  return sorted([p for v in vs if (p:=prediction(v,sid,elapsed,now))],key=lambda p:p['minutes'])
 @app.get('/api/journeys',response_model=Journeys)
-def journeys(origin:str,destination:str,preference:Literal['fastest','comfortable']='comfortable',limit:int=Query(3,ge=1,le=20),depart_at:datetime|None=None,max_transfers:int=Query(0,ge=0,le=1)):
+def journeys(origin:str,destination:str,preference:Literal['fastest','comfortable']='comfortable',limit:int=Query(3,ge=1,le=20),depart_at:datetime|None=None,max_transfers:int=Query(0,ge=0,le=1),allow_demo:bool=False):
  stop(origin);stop(destination)
  if origin==destination: raise HTTPException(422,'Choose two different stops.')
  from .feeds import mode
  if max_transfers==1 and mode()!='simulation':
   from .explorer import explore
-  result=explore(origin,destination,sort='fastest' if preference=='fastest' else 'comfortable',max_transfers=1,window_minutes=120,duration_minutes=240,limit=limit,offset=0,depart_at=depart_at,search_id=None)
+  result=explore(origin,destination,sort='fastest' if preference=='fastest' else 'comfortable',max_transfers=1,window_minutes=120,duration_minutes=240,limit=limit,offset=0,depart_at=depart_at,search_id=None,allow_demo=allow_demo)
   converted=[]
   for i,p in enumerate(result['journeys']):
    first=p['legs'][0]

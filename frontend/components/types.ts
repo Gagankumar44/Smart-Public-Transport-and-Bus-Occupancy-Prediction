@@ -111,6 +111,6 @@ export const sourceLabel = (source: string) =>
     authorized: "Authorized feed",
     real_observed: "Observed feed",
     schedule: "Scheduled estimate",
-    mixed: "Mixed sources",
+    demo_journey: "Demo connection - not a real bus", mixed: "Mixed sources",
     historical: "Historical estimate",
   })[source] || "Source unavailable";

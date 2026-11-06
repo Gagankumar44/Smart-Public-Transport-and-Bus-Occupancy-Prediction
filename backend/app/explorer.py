@@ -271,13 +271,13 @@ class Search:
   return items,dict(patterns_in_network=len(self.g['patterns']),templates_searched=processed,trip_instances_evaluated=self.instances,limited=self.limited,max_templates=MAX_TEMPLATES,max_trip_instances=MAX_INSTANCES,max_results=MAX_RESULTS,max_transfers=self.max_transfers,departure_window_minutes=int((self.first_deadline-self.clock).total_seconds()/60),journey_limit_minutes=int((self.deadline-self.clock).total_seconds()/60),transfer_buffer_seconds=TRANSFER_SECONDS,transfer_policy='Same exact stop ID only; three-minute planning buffer, not a surveyed transfer guarantee. No walking links inferred.',distance_note='Distances follow ordered GTFS shapes where aligned; missing shapes are labelled stop-segment estimates. Shortest badge compares measured paths only.',scope='Best among bounded searched paths; not every possible Bengaluru journey.',elapsed_ms=round((time.monotonic()-self.started)*1000))
 
 @router.get('/explore')
-def explore(origin:str,destination:str,sort:SORTS='recommended',max_transfers:int=Query(1,ge=0,le=1),window_minutes:int=Query(120,ge=30,le=240),duration_minutes:int=Query(240,ge=30,le=360),limit:int=Query(10,ge=1,le=20),offset:int=Query(0,ge=0,le=80),depart_at:datetime|None=None,search_id:str|None=Query(None,max_length=40)):
+def explore(origin:str,destination:str,sort:SORTS='recommended',max_transfers:int=Query(1,ge=0,le=1),window_minutes:int=Query(120,ge=30,le=240),duration_minutes:int=Query(240,ge=30,le=360),limit:int=Query(10,ge=1,le=20),offset:int=Query(0,ge=0,le=80),depart_at:datetime|None=None,search_id:str|None=Query(None,max_length=40),allow_demo:bool=False):
  from . import main
  main.stop(origin);main.stop(destination)
  if origin==destination:raise HTTPException(422,'Choose two different stops.')
  now=datetime.now(TZ)
  if depart_at is not None and (depart_at.tzinfo is None or not now-timedelta(minutes=1)<=depart_at<=now+timedelta(days=30)):raise HTTPException(422,'Use a timezone-aware departure between now and 30 days ahead.')
- params=(origin,destination,max_transfers,window_minutes,duration_minutes,depart_at.isoformat() if depart_at else None,version(),feeds.mode(),feeds.source_id())
+ params=(allow_demo,origin,destination,max_transfers,window_minutes,duration_minutes,depart_at.isoformat() if depart_at else None,version(),feeds.mode(),feeds.source_id())
  with LOCK:
   for key in list(SNAPSHOTS):
    if SNAPSHOTS[key]['expires']<time.monotonic():del SNAPSHOTS[key]
@@ -293,6 +293,10 @@ def explore(origin:str,destination:str,sort:SORTS='recommended',max_transfers:in
   try:
    search=Search(origin,destination,clock,window_minutes,duration_minutes,max_transfers)
    items,coverage=search.run()
+   if not items and allow_demo:
+    from .journey_demo import paths
+    items=paths(main.stop(origin),main.stop(destination),clock)
+    coverage={**coverage,'demo_fallback':True,'scope':'Illustrative demo connections; no published bus service verified for this pair.'}
   finally:
    if search:search.close()
    SEARCH_SLOTS.release()

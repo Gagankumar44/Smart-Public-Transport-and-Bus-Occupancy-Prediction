@@ -171,3 +171,15 @@ def test_selected_scheduled_trip_resolves_outside_preview_fleet(route_case,monke
  assert response.json()['lat'] is None and response.json()['lon'] is None
  assert c['client'].get('/api/vehicles/'+vid+'/forecast').status_code==200
  assert c['client'].get('/api/vehicles/scheduled:unknown:20261107').status_code==404
+
+def test_demo_fallback_is_explicit_and_never_replaces_real_results(route_case):
+ c=route_case
+ empty=get(c,origin='d',destination='a');assert not empty['journeys']
+ demo=get(c,origin='d',destination='a',allow_demo=True)
+ assert len(demo['journeys'])==3 and demo['coverage']['demo_fallback']
+ assert all(j['metadata']['source']=='demo_journey' and not j['distance_measured'] for j in demo['journeys'])
+ assert all(j['crowding']=='Unknown' for j in demo['journeys'])
+ real=get(c,allow_demo=True)
+ assert real['journeys'] and all(j['metadata']['source']=='schedule' for j in real['journeys'])
+ response=c['client'].get('/api/journeys',params={**c['params'],'origin':'d','destination':'a','max_transfers':1,'allow_demo':True})
+ assert response.status_code==200 and len(response.json()['journeys'])==3

@@ -328,6 +328,7 @@ export default function JourneyPlanner() {
               ...pair,
               preference: mode,
               max_transfers: "1",
+              allow_demo: "true",
               ...(plannedDeparture
                 ? { depart_at: istIso(plannedDeparture) }
                 : {}),
@@ -405,6 +406,7 @@ export default function JourneyPlanner() {
       <div className="rl-planner-view-switch" aria-label="Planner mobile view"><button aria-pressed={mobileView==="list"} onClick={()=>setMobileView("list")}>Journey list</button><button aria-pressed={mobileView==="map"} onClick={()=>setMobileView("map")}>Route map</button></div>
       <div className="workspace">
         <section className={"planner " + (searched ? "results-mode" : "")}>
+          <p className="rl-note">Real schedules are searched first. If none are found, clearly labeled demo connections are shown. Demo times and lines are illustrative, not actual bus services.</p>
           <div className="intro">
             <div className="eyebrow">
               <span /> Journey Planner
@@ -767,7 +769,7 @@ export default function JourneyPlanner() {
           </div>
         </section>
       </div>
-      {monitoredJourney && !plannedDeparture && (
+      {monitoredJourney && monitoredJourney.metadata.source !== "demo_journey" && !plannedDeparture && (
         <div className="rl-planner-watch-wrap">
         {!!selectedJourney?.transfers && <p className="rl-note">This journey changes buses. Monitoring below covers the first bus to {monitoredJourney.destination.name}. Confirm your progress before planning the next leg.</p>}
         <JourneyIntelligence
@@ -803,7 +805,7 @@ export default function JourneyPlanner() {
               <X size={20} />
             </button>
           </div>
-          {!plannedDeparture && !selectedJourney.transfers && (
+          {!plannedDeparture && !selectedJourney.transfers && selectedJourney.metadata.source !== "demo_journey" && (
             <CrowdForecast
               journey={selectedJourney}
               controls={!!status?.demo_controls}

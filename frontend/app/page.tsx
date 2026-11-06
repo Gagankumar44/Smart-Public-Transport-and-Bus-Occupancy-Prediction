@@ -129,16 +129,7 @@ export default function Dashboard() {
               "Know your bus before you board. Plan a calmer journey across Bengaluru’s Outer Ring Road.",
             )}
           </p>
-          <div className="rl-hero-route">
-            <span>Silk Board</span>
-            <span className="rl-route-dashes">
-              <i />
-              <i />
-              <i />
-              <i />
-            </span>
-            <span>Marathahalli</span>
-          </div>
+
         </div>
         <div className="rl-hero-art">
           <span className="rl-art-chip">

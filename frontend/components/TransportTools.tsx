@@ -151,11 +151,11 @@ export function TrackBus() {
       <button aria-pressed={view === "demo"} onClick={() => setView("demo")}><BusFront size={16} /> Preview demo tracking</button>
     </div>
     {status?.mode === "schedule" && <p className="rl-meta" style={{ marginBottom: 20 }}>Live BMTC GPS is not connected. You can browse real published routes and schedules below. Scheduled services are not observed buses.</p>}
-    {view === "scheduled" ? <ScheduledServices /> : view === "demo" ? <DemoTracking onClose={()=>setView("scheduled")}/> : <ObservedBuses />}
+    {view === "scheduled" ? <ScheduledServices /> : view === "demo" ? <DemoTracking onClose={()=>setView("scheduled")}/> : <ObservedBuses onDemo={()=>setView("demo")} />}
   </main>;
 }
 
-function ObservedBuses() {
+function ObservedBuses({onDemo}:{onDemo:()=>void}) {
   const { vehicles, stops, status, loading, refresh } = useTransit();
   const { t } = useLocale();
   const [query, setQuery] = useState(""),
@@ -234,7 +234,7 @@ function ObservedBuses() {
           {!loading && !available.length && (
             <div className="rl-empty">
               <Search size={25} />
-              <h2>Live positions unavailable</h2>
+              <h2>Live positions unavailable</h2><button className="rl-primary" onClick={onDemo}>Show moving demo bus</button>
               <p>
                 No observed vehicles match this search. Use Scheduled services
                 above to browse the published network. Live positions require an authorized feed.

@@ -64,7 +64,7 @@ export default function RouteExplorer() {
     if (append) setMoreLoading(true); else setLoading(true);
     setError("");
     const params = new URLSearchParams({ origin: ctx.origin, destination: ctx.destination, sort: order,
-      max_transfers: String(ctx.transfers), window_minutes: String(ctx.window), duration_minutes: String(ctx.duration),
+      allow_demo: "true", max_transfers: String(ctx.transfers), window_minutes: String(ctx.window), duration_minutes: String(ctx.duration),
       limit: "8", offset: append && prior ? String(prior.next_offset) : "0" });
     if (ctx.depart) params.set("depart_at", ctx.depart);
     if (prior && !changed && !fresh) params.set("search_id", prior.search_id);
@@ -132,6 +132,7 @@ export default function RouteExplorer() {
 
   return <main className="rl-explorer">
     <header className="rl-page-heading"><div><span className="rl-explorer-eyebrow"><Compass size={14} /> SMART ROUTE EXPLORER</span><h1>Discover your better way.</h1><p>Compare distance, arrival time and changes. Choose what works for your journey.</p></div><span className="rl-tag neutral">Published BMTC network</span></header>
+    <p className="rl-note">Real schedules first. Unsupported pairs show labeled demo connections with illustrative straight-line geometry and synthetic times; these are not BMTC services.</p>
     <form className="rl-panel rl-explorer-form" onSubmit={search}>
       <StopInput label="From" value={origin} onChange={setOrigin} />
       <button type="button" className="rl-swap" aria-label="Swap route explorer stops" onClick={() => { setOrigin(destination); setDestination(origin); }}><ArrowUpDown size={17} /></button>
@@ -177,7 +178,7 @@ export default function RouteExplorer() {
             {selected.legs.map((l, i) => <div className="rl-explorer-leg" key={l.id}><h4><BusFront size={15} /> {i + 1}. Board {l.route_name} at {l.origin.name}</h4><p>{clock(l.boarding_at)} → {clock(l.arrival_at)} IST · {l.distance_km.toFixed(1)} km · {sourceLabel(l.metadata.source)}</p><details><summary>{l.stops.length} stops · show timeline</summary><ol>{l.stops.map((s, order) => <li key={s.id + order}><span>{s.name}</span><small>{s.arrival_at ? clock(s.arrival_at) + " scheduled" : "Time unavailable"}</small></li>)}</ol></details>{i < selected.legs.length - 1 && <div className="rl-explorer-transfer">Change at {l.destination.name}. Allow the stated same-stop buffer; confirm the boarding point.</div>}</div>)}
             <p className="rl-meta">Distance: {selected.distance_measured ? "ordered GTFS shape geometry" : "includes explicitly estimated stop segments"}. Walking distance: {selected.walking_km} km; no pedestrian links inferred. Uncertainty is heuristic, not a guarantee.</p>
           </div>
-          {watched && !context.current?.depart && <div className="rl-panel rl-explorer-watch"><h3>Monitor a bus leg</h3><p className="rl-meta">Boarding and progress must be confirmed. A multi-leg path is monitored one bus at a time; confirm the transfer before watching its next leg. Planning-map comparison does not relocate you.</p>{selected.legs.length > 1 && <label className="rl-field">Bus leg<select value={monitorLeg} onChange={(e) => setMonitorLeg(Number(e.target.value))}>{selected.legs.map((l,i) => <option value={i} key={l.id}>{l.route_name} · {l.origin.name} → {l.destination.name}</option>)}</select></label>}<JourneyIntelligence key={leg?.id} journey={watched} preference={sort === "fastest" ? "fastest" : "comfortable"} alertsEnabled={profile?.alerts_enabled ?? true} expanded={false} onUpdate={() => context.current && load(context.current, sort, false, true)} onSelect={(j) => setNotice(`Watch switched to ${j.route_name} from ${j.origin.name}. The map above remains the selected planning path.`)} /></div>}
+          {watched && watched.metadata.source !== "demo_journey" && !context.current?.depart && <div className="rl-panel rl-explorer-watch"><h3>Monitor a bus leg</h3><p className="rl-meta">Boarding and progress must be confirmed. A multi-leg path is monitored one bus at a time; confirm the transfer before watching its next leg. Planning-map comparison does not relocate you.</p>{selected.legs.length > 1 && <label className="rl-field">Bus leg<select value={monitorLeg} onChange={(e) => setMonitorLeg(Number(e.target.value))}>{selected.legs.map((l,i) => <option value={i} key={l.id}>{l.route_name} · {l.origin.name} → {l.destination.name}</option>)}</select></label>}<JourneyIntelligence key={leg?.id} journey={watched} preference={sort === "fastest" ? "fastest" : "comfortable"} alertsEnabled={profile?.alerts_enabled ?? true} expanded={false} onUpdate={() => context.current && load(context.current, sort, false, true)} onSelect={(j) => setNotice(`Watch switched to ${j.route_name} from ${j.origin.name}. The map above remains the selected planning path.`)} /></div>}
         </>}
       </section>
     </div>}
