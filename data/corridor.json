@@ -1,0 +1,129 @@
+{
+  "stops": [
+    {
+      "id": "silk",
+      "name": "Central Silk Board",
+      "lat": 12.91803,
+      "lon": 77.62355,
+      "context": "Central Silk Board (Towards Marathahalli)",
+      "gtfs_stop_id": "20707"
+    },
+    {
+      "id": "21177",
+      "name": "SI Apartment HSR Layout",
+      "lat": 12.91677,
+      "lon": 77.62942,
+      "context": "SI Apartment HSR Layout (Towards Hebbala)",
+      "gtfs_stop_id": "21177"
+    },
+    {
+      "id": "20568",
+      "name": "14th Main HSR Layout",
+      "lat": 12.91637,
+      "lon": 77.63472,
+      "context": "14th Main HSR Layout (Towards Hebbala)",
+      "gtfs_stop_id": "20568"
+    },
+    {
+      "id": "20749",
+      "name": "Depot-25 Gate",
+      "lat": 12.91936,
+      "lon": 77.64255,
+      "context": "Depot-25 Gate (Towards Hebbala)",
+      "gtfs_stop_id": "20749"
+    },
+    {
+      "id": "20598",
+      "name": "Agara Junction",
+      "lat": 12.92452,
+      "lon": 77.65028,
+      "context": "Agara Junction (Towards Hebbala)",
+      "gtfs_stop_id": "20598"
+    },
+    {
+      "id": "20851",
+      "name": "Ibbaluru",
+      "lat": 12.9216,
+      "lon": 77.66176,
+      "context": "Ibbaluru (Towards Hebbala)",
+      "gtfs_stop_id": "20851"
+    },
+    {
+      "id": "20889",
+      "name": "Sarjapura Ring Road Junction",
+      "lat": 12.92113,
+      "lon": 77.66604,
+      "context": "Sarjapura Ring Road Junction (Towards Marathahalli Bridge)",
+      "gtfs_stop_id": "20889"
+    },
+    {
+      "id": "21092",
+      "name": "Bellanduru Petrol Bunk",
+      "lat": 12.92322,
+      "lon": 77.6702,
+      "context": "Bellanduru Petrol Bunk (Towards Hebbala)",
+      "gtfs_stop_id": "21092"
+    },
+    {
+      "id": "20638",
+      "name": "Bellanduru City light Apartment",
+      "lat": 12.92493,
+      "lon": 77.67394,
+      "context": "Bellanduru City light Apartment (Towards Marathahalli Bridge)",
+      "gtfs_stop_id": "20638"
+    },
+    {
+      "id": "20771",
+      "name": "Eco Space",
+      "lat": 12.92838,
+      "lon": 77.6812,
+      "context": "Eco Space (Towards Hebbala)",
+      "gtfs_stop_id": "20771"
+    },
+    {
+      "id": "20754",
+      "name": "Devarabisanahalli Ring Road",
+      "lat": 12.93218,
+      "lon": 77.68729,
+      "context": "Devarabisanahalli Ring Road (Towards Hebbala)",
+      "gtfs_stop_id": "20754"
+    },
+    {
+      "id": "21059",
+      "name": "New Horizon College",
+      "lat": 12.93516,
+      "lon": 77.69063,
+      "context": "New Horizon College (Towards Hebbala)",
+      "gtfs_stop_id": "21059"
+    },
+    {
+      "id": "20895",
+      "name": "Kadubisanahalli",
+      "lat": 12.94259,
+      "lon": 77.69704,
+      "context": "Kadubisanahalli (Towards Hebbala)",
+      "gtfs_stop_id": "20895"
+    },
+    {
+      "id": "21032",
+      "name": "Multiplex Marathahalli",
+      "lat": 12.95153,
+      "lon": 77.69973,
+      "context": "Multiplex Marathahalli (Towards Hebbala)",
+      "gtfs_stop_id": "21032"
+    },
+    {
+      "id": "marathahalli",
+      "name": "Kalamandira Marathahalli Bridge",
+      "lat": 12.96038,
+      "lon": 77.70135,
+      "context": "Kalamandira Marathahalli Bridge (Towards Hebbala)",
+      "gtfs_stop_id": "22670"
+    }
+  ],
+  "route_reference": "500-F",
+  "trip_reference": "2509",
+  "source": "https://github.com/Vonter/bmtc-gtfs",
+  "license": "ODbL-1.0; individual contents may be copyright BMTC",
+  "notice": "Actual stop sequence from GTFS. All demo departures, vehicles, reverse patterns and occupancy are synthetic. Lines connect stops, not road geometry."
+}
